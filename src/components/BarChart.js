@@ -1,6 +1,5 @@
 import React from 'react';
 import * as d3 from 'd3';
-const uuidv4 = require('uuid/v4');
 
 export const BarChart = ({ data, canvas }) => {
   const [h, w] = [canvas.height, canvas.width]
@@ -17,9 +16,9 @@ export const BarChart = ({ data, canvas }) => {
   const colorScale = d3.scaleSequential(d3.interpolateSpectral)
     .domain([maxAvg, minAvg]);
 
-  const bars = data.map(d => (
+  const bars = data.map((d, i) => (
     <rect x={xScale(new Date(d.date))}
-      key={uuidv4()}
+      key={`bar-${i}`}
       y={yScale(+d.high)}
       height={yScale(+d.low) - yScale(+d.high)}
       width={w / data.length}
