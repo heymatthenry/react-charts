@@ -1,24 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
+import { BarChart } from './components/BarChart'
 
 function App() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const resp = await fetch('https://raw.githubusercontent.com/sxywu/react-d3-example/master/public/sf.json');
+      const json = await resp.json();
+      setData((prevState) => [...prevState, ...json]);
+    }
+
+    fetchData();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BarChart data={data} canvas={{ width: 600, height: 400 }} />
     </div>
   );
 }
