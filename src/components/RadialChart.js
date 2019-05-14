@@ -25,7 +25,12 @@ export const RadialChart = ({ data, canvas }) => {
     })
   }))
 
-  const slices = radialChartData.map((d, i) => <path d={d.path} fill={d.fill} />)
+  const slices = radialChartData.map((d, i) => (
+    <path d={d.path}
+      fill={d.fill}
+      key={`slice-${i}`}
+    />))
+
   return (
     <svg height={h} width={w}>
       <g transform={`translate(${w / 2}, ${w / 2})`}>
