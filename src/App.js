@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import { BarChart } from './components/BarChart'
 import { RadialChart } from './components/RadialChart'
+import { LineChart } from './components/LineChart'
 
 function App() {
   const [data, setData] = useState([]);
@@ -20,6 +21,7 @@ function App() {
     <div className="App">
       <BarChart data={data} canvas={{ width: 600, height: 400 }} />
       <RadialChart data={data} canvas={{ width: 600, height: 600 }} />
+      <LineChart data={data} canvas={{ width: 600, height: 400 }} />
     </div>
   );
 }
