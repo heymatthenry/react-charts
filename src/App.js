@@ -5,18 +5,29 @@ import { RadialChart } from './components/RadialChart'
 import { LineChart } from './components/LineChart'
 
 function App() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({
+    sf: [],
+    ny: []
+  });
   const [loc, setLoc] = useState("sf");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const resp = await fetch(`https://raw.githubusercontent.com/sxywu/react-d3-example/master/public/${loc}.json`);
-      const json = await resp.json();
-      setData(() => [...json]);
-    }
+    setIsLoading(true)
+    Promise.all([
+      fetch(`https://raw.githubusercontent.com/sxywu/react-d3-example/master/public/ny.json`),
+      fetch(`https://raw.githubusercontent.com/sxywu/react-d3-example/master/public/sf.json`)
+    ]).then(resps => Promise.all(resps.map(resp => resp.json())))
+      .then(([ny, sf]) => {
+        console.log(ny)
+        setData((prevState) => Object.assign(prevState, { sf: [...sf], ny: [...ny] }));
+        setIsLoading(false);
+      })
+  }, []);
 
-    fetchData();
-  }, [loc]);
+  useEffect(() => {
+    setLoc("sf")
+  }, [data])
 
   const handleCityChange = (e) => {
     setLoc(e.target.value)
@@ -28,9 +39,13 @@ function App() {
         <option value="sf">San Francisco</option>
         <option value="ny">New York</option>
       </select>
-      <BarChart data={data} canvas={{ width: 600, height: 400 }} />
-      <RadialChart data={data} canvas={{ width: 600, height: 600 }} />
-      <LineChart data={data} canvas={{ width: 600, height: 400 }} />
+      {isLoading ? <p>Loading…</p> :
+        <div>
+          <BarChart data={data[loc]} canvas={{ width: 600, height: 400 }} />
+          <RadialChart data={data[loc]} canvas={{ width: 600, height: 600 }} />
+          <LineChart data={data[loc]} canvas={{ width: 600, height: 400 }} />
+        </div>
+      }
     </div>
   );
 }
